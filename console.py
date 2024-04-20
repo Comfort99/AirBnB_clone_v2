@@ -129,7 +129,6 @@ class HBNBCommand(cmd.Cmd):
 
         # Extract parameters and format them as key-value pairs
         params = {}
-
         for param in args_list[1:]:
             if "=" not in param:
                 print("** invalid parameter format **")
@@ -155,7 +154,6 @@ class HBNBCommand(cmd.Cmd):
                     value = int(value)
                 except ValueError:
                     pass
-
             # Add the key-value pair to params dictionary
             params[key] = value
 
