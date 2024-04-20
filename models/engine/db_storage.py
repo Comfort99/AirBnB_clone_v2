@@ -1,18 +1,17 @@
 #!/usr/bin/python3
 """Defines the DBStorage engine."""
 
-from os import getenv
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker, scoped_session
-from sqlalchemy.orm import relationship
-from models.base_model import BaseModel
-from models.base_model import Base
-from models.state import State
+from models.base_model import BaseModel, Base
+from models.amenity import Amenity
 from models.city import City
-from models.user import User
 from models.place import Place
 from models.review import Review
-from models.amenity import Amenity
+from models.state import State
+from models.user import User
+from sqlalchemy import (create_engine)
+from sqlalchemy.orm import sessionmaker, relationship, scoped_session
+from os import getenv
+
 
 
 class DBStorage:
@@ -40,14 +39,24 @@ class DBStorage:
         objects depending on the class name
         """
         objects = {}
-        classes = [State, City, User, Place, Review, Amenity]
-        if cls:
-            classes = [cls]
-            for clss in classes:
-                for obj in self.__session.query(clss).all():
-                    key = '{}.{}'.format(obj.__class__.__name__, obj.id)
-                    objects[key] = obj
-            return objects
+        
+        if cls is None:
+            objects_list = self.__session.query(State).all()
+            objects_list.extend(self.__session.query(City).all())
+            objects_list.extend(self.__session.query(User).all())
+            objects_list.extend(self.__session.query(Place).all())
+            objects_list.extend(self.__session.query(Review).all())
+            objects_list.extend(self.__session.query(Amenity).all())
+        else:
+            if type(cls) == str:
+                cls = eval(cls)
+            objects_list = self.__session.query(cls).all()
+
+        for obj in objects_list:
+            key = "{}.{}".format(type(obj).__name__, obj.id)
+            objects_dictionary[key] = obj
+
+        return objects_dictionary
 
     def new(self, obj):
         """
