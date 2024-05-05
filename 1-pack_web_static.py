@@ -16,7 +16,7 @@ def do_pack():
     time = datetime.now()
     archive = 'web_static_' + time.strftime("%Y%m%d%H%M%S") + '.' + 'tgz'
 
-    local('mkdir versions')
+    local('mkdir -p versions')
 
     archive_path = f"versions/{archive}"
 
