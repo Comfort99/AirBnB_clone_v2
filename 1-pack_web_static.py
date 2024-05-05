@@ -18,8 +18,12 @@ def do_pack():
 
     local('mkdir versions')
 
-    results = local('tar -czvf versions/{} web_static'.format(archive))
+    archive_path = f"versions/{archive}"
+
+    results = local('tar -czvf {} web_static'.format(archive_path))
     if results is None:
         return None
     else:
+        archive_size = os.path.getsize(archive_path)
+        print(f"web_static packed: {archive_path} -> {archive_size}Bytes")
         return archive
